@@ -1,0 +1,66 @@
+- name: "hostname設定"
+  hosts: all
+  become: yes
+  tasks:
+    - hostname:
+        name: "{{hostname}}"
+
+- name: set timezone to
+  hosts: all
+  become: yes
+  tasks:
+    - name: Set timezone variables Asia/Tokyo
+      file: src=/usr/share/zoneinfo/Asia/Tokyo dest=/etc/localtime force=yes state=link
+    - command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
+
+- name: setup ntp
+  hosts: all
+  become: yes
+  tasks:
+    - apt: pkg=ntp state=latest
+- name: require package install
+  hosts: all
+  become: yes
+  tasks:
+    - apt: pkg="{{item}}" state="latest" update_cache="yes"
+      with_items:
+        - mosh
+        - virtualenv
+        - python-dev
+
+- name: "user add"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "user octo add"
+      user:
+        name: "octo"
+        groups: dialout
+
+- name: ocotoprint setup
+  hosts: all
+  become: yes
+  become_user: octo
+  tasks:
+    - name: git clone
+      git:
+        repo: https://github.com/foosel/OctoPrint.git
+        dest: ~/octoprint
+        version: master
+        accept_hostkey: yes
+    - name: pip install
+      command: virtualenv venv
+      args:
+          chdir: ./octoprint
+          creates: ./venv
+
+    - name: pip install(2)
+      command: ./venv/bin/pip install pip --upgrade
+      args:
+          chdir: ./octoprint
+
+    - name: pip install(3)
+      command: ./venv/bin/python setup.py install
+      args:
+          chdir: ./octoprint
+          creates: ./venv/bin/octoprint

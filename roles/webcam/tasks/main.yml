@@ -1,0 +1,40 @@
+- name: Install dependencies for webcamera
+  apt: name={{item}} state=latest
+  with_items:
+    - subversion
+    - libjpeg62-turbo-dev
+    - imagemagick
+    - libav-tools
+    - cmake
+    - ffmpeg
+
+- name: append role octoprint_user
+  user: name={{octoprint_user}} append=yes groups=dialout,tty,staff,video
+
+
+- name: Clone mjpeg release
+  register: mjpeg
+  git: repo={{mjpg_streamer_repo}} dest={{webcam_installDir}}
+
+- name: Setup mjpeg
+  when: mjpeg|changed
+  environment:
+    LD_LIBRARY_PATH: "{{webcam_installDir}}/mjpg-streamer-experimental"
+  shell: make
+  args:
+    chdir: "{{webcam_installDir}}/mjpg-streamer-experimental"
+
+
+- name: Set ownership of octoprint install webcam_installDir
+  file: path="{{webcam_installDir}}" recurse=yes state=directory owner="{{octoprint_user}}"
+
+
+- name: Set ownership of octoprint install webcam_installDir/scripts
+  file: path="{{webcam_installDir}}/scripts/" recurse=yes state=directory owner="{{octoprint_user}}"
+
+
+- name: Setup webcamScript defaults
+  template: src=webcam.j2 dest={{webcam_installDir}}/scripts/webcam owner="{{octoprint_user}}" mode=0755
+
+- name: Setup webcamScript defaults
+  template: src=webcamDaemon.j2 dest={{webcam_installDir}}/scripts/webcamDaemon owner="{{octoprint_user}}" mode=0755

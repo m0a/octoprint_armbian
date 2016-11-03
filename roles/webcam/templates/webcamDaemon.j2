@@ -1,0 +1,38 @@
+#!/bin/bash
+
+MJPGSTREAMER_HOME={{webcam_installDir}}/mjpg-streamer-experimental
+MJPGSTREAMER_INPUT_USB="input_uvc.so"
+
+# init configuration
+camera="auto"
+camera_usb_options="-r 640x480 -f 10"
+
+
+# runs MJPG Streamer, using the provided input plugin + configuration
+function runMjpgStreamer {
+    input=$1
+    pushd $MJPGSTREAMER_HOME
+    echo Running ./mjpg_streamer -o "output_http.so -w ./www" -i "$input"
+    LD_LIBRARY_PATH=. ./mjpg_streamer -o "output_http.so -w ./www" -i "$input"
+    popd
+}
+
+
+# starts up the USB webcam
+function startUsb {
+    logger "Starting USB webcam"
+    runMjpgStreamer "$MJPGSTREAMER_INPUT_USB $camera_usb_options"
+}
+
+
+# echo configuration
+echo camera: $camera
+echo usb options: $camera_usb_options
+
+# keep mjpg streamer running if some camera is attached
+while true; do
+    if [ -e "/dev/video0" ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
+        startUsb
+    fi
+    sleep 120
+done

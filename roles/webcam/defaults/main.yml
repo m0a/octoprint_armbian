@@ -1,0 +1,3 @@
+mjpg_streamer_repo: https://github.com/jacksonliam/mjpg-streamer.git
+webcam_installDir: "/opt/webcam"
+octoprint_user: octoprint
