@@ -38,3 +38,6 @@
 
 - name: Setup webcamScript defaults
   template: src=webcamDaemon.j2 dest={{webcam_installDir}}/scripts/webcamDaemon owner="{{octoprint_user}}" mode=0755
+
+- name: Setup Octoprint init script(webcam custom)
+  template: src=octoprint.init.j2  dest=/etc/init.d/octoprint mode=0755

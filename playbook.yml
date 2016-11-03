@@ -1,3 +1,10 @@
+# - name: "test"
+#   hosts: all
+#   become: yes
+#   tasks:
+#     - name: test
+#       command: echo {{ ansible_all_ipv4_addresses[0] }}
+
 - name: "hostname"
   hosts: all
   become: yes
@@ -27,12 +34,6 @@
       with_items:
         - mosh
 
-- name: "webcam設定"
-  hosts: all
-  become: yes
-  roles:
-    - name: webcamera
-      role: webcam
 
 - name: "octoprint設定"
   hosts: all
@@ -42,6 +43,13 @@
       role: ansible-octoprint
       octoprint_version: 1.3.0rc1
       octoprint_flash: false
+    - name: webcamera
+      role: webcam
+
+- name: "webcam設定"
+  hosts: all
+  become: yes
+  roles:
     - name: webcamera
       role: webcam
 

@@ -18,13 +18,9 @@ Host orangepi(192.168.11.111)
   User m0a
 ```
 
-
-
 # octoprintインストール
 
-
 ```
-ansible-galaxy install -p ./roles -r requirements.yml
 ansible-playbook -i hosts playbook.yml
 ```
 

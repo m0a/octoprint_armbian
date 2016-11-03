@@ -1,2 +1,12 @@
 hostname: octoprint
 ansible_sudo_pass: p@ssword
+
+octoprint_config_webcam:
+  stream: "http://{{ansible_all_ipv4_addresses[0]}}:8080/?action=stream"
+  snapshot: "http://{{ansible_all_ipv4_addresses[0]}}:8080/?action=snapshot"
+  ffmpeg: "/usr/bin/ffmpeg"
+  watermark: true
+  timelapse:
+    type: "zchange"
+
+
