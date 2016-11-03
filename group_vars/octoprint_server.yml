@@ -1,1 +1,2 @@
+hostname: octoprint
 ansible_sudo_pass: p@ssword

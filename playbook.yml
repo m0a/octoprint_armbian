@@ -1,3 +1,32 @@
+- name: "hostname"
+  hosts: all
+  become: yes
+  tasks:
+    - hostname:
+        name: "{{hostname}}"
+
+- name: set timezone to Asia/Tokyo
+  hosts: all
+  become: yes
+  tasks:
+    - name: Set timezone variables Asia/Tokyo
+      file: src=/usr/share/zoneinfo/Asia/Tokyo dest=/etc/localtime force=yes state=link
+    - command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
+
+- name: setup ntp
+  hosts: all
+  become: yes
+  tasks:
+    - apt: pkg=ntp state=latest
+
+- name: require package install
+  hosts: all
+  become: yes
+  tasks:
+    - apt: pkg="{{item}}" state="latest" update_cache="yes"
+      with_items:
+        - mosh
+
 - name: "webcam設定"
   hosts: all
   become: yes
