@@ -1,4 +1,4 @@
-ocotoprintインストール自動化
+octoprintインストール自動化
 webcameraも設定
 
 # インストール先の設定
@@ -20,7 +20,7 @@ Host orangepi(192.168.11.111)
 
 
 
-# ocotoprintインストール
+# octoprintインストール
 
 
 ```

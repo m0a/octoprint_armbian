@@ -37,7 +37,7 @@
         name: "octo"
         groups: dialout
 
-- name: ocotoprint setup
+- name: octoprint setup
   hosts: all
   become: yes
   become_user: octo
