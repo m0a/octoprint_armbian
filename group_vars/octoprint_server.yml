@@ -1,7 +1,7 @@
 hostname: octoprint
 ansible_sudo_pass: p@ssword
 
-octoprint_version: 1.2.17
+octoprint_version: 1.3.1
 
 octoprint_config_server_port: 5000
 octoprint_flash: false
